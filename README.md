@@ -174,5 +174,5 @@ docker compose down -v
 ## Kaynaklar
 
 - [n8n Resmi Dokümantasyon](https://docs.n8n.io)
-- [Aforsoft W21 — n8n Blog Yazısı](https://aforsoft.com/blog/2026-ai-stack-rehberi-n8n-ile-akilli-is-akisi-529)
-- [Aforsoft 2026 AI Haritası](https://aforsoft.com/blog/2026-ai-haritasi-ajanlardan-idelere-527)
+- [Aforsoft W21 — n8n Blog Yazısı](https://aforsoft.com/blog/n8n-ile-kod-yazmadan-akilli-is-akisi-nasil-kurulur-530)
+- [Aforsoft 2026 AI Haritası](https://aforsoft.com/blog/2026-ai-haritasi-agentlardan-idelere-hangi-araci-nerede-kullanmalisiniz-527)
