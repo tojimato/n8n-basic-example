@@ -1,0 +1,102 @@
+{
+  "name": "Müşteri Talep Akışı — n8n Demo",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "musteri-talep",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-0001-0001-a1b2c3d40001",
+      "name": "1 — Müşteri Talebi Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "musteri-talep-aforsoft-demo"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Webhook typeVersion 2 → veri .body altında gelir\n// Fallback: eski sürüm için doğrudan $json\nconst raw  = $input.first().json;\nconst veri = raw.body ?? raw;\n\nif (!veri.isim || !veri.email) {\n  throw new Error('Eksik alan! Gelen veri: ' + JSON.stringify(raw));\n}\n\nreturn {\n  json: {\n    isim:   veri.isim,\n    email:  veri.email,\n    sirket: veri.sirket,\n    tur:    veri.talep === 'demo talebi' ? 'satis' : 'destek',\n    tarih:  new Date().toISOString()\n  }\n};"
+      },
+      "id": "a1b2c3d4-0002-0002-0002-a1b2c3d40002",
+      "name": "2 — CRM Formatına Çevir (Code)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/crm/kayit",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0003-0003-0003-a1b2c3d40003",
+      "name": "3 — Mock CRM'e Kaydet (HTTP Request)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ basarili: true, kayit_id: $json.kayit_id, mesaj: $json.mesaj }) }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0004-0004-0004-a1b2c3d40004",
+      "name": "4 — Webhook'a Yanıt Döndür",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [960, 300]
+    }
+  ],
+  "connections": {
+    "1 — Müşteri Talebi Webhook": {
+      "main": [
+        [
+          {
+            "node": "2 — CRM Formatına Çevir (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2 — CRM Formatına Çevir (Code)": {
+      "main": [
+        [
+          {
+            "node": "3 — Mock CRM'e Kaydet (HTTP Request)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3 — Mock CRM'e Kaydet (HTTP Request)": {
+      "main": [
+        [
+          {
+            "node": "4 — Webhook'a Yanıt Döndür",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    { "name": "aforsoft" },
+    { "name": "w21-demo" }
+  ],
+  "triggerCount": 0,
+  "versionId": "aforsoft-w21-v1"
+}

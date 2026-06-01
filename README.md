@@ -1,6 +1,6 @@
 # n8n Müşteri Talep Akışı — Demo
 
-Aforsoft [W21 blog yazısındaki](https://aforsoft.com/blog/2026-ai-stack-rehberi-n8n-ile-akilli-is-akisi-529) n8n workflow örneğinin çalıştırılabilir versiyonu.
+Aforsoft [W21 blog yazısındaki](https://aforsoft.com/blog/n8n-ile-kod-yazmadan-akilli-is-akisi-nasil-kurulur-530) n8n workflow örneğinin çalıştırılabilir versiyonu.
 
 ## Akış
 

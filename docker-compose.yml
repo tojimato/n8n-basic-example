@@ -1,0 +1,45 @@
+services:
+
+  # ── n8n ────────────────────────────────────────────────────────────────────
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY:-degistir-bunu-gizli-tut}
+      - GENERIC_TIMEZONE=Europe/Istanbul
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678/
+      # Test/geliştirme için e-posta bildirimini kapat
+      - N8N_EMAIL_MODE=false
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - api
+    networks:
+      - n8n_net
+
+  # ── Mock CRM API ────────────────────────────────────────────────────────────
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: mock-crm-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"       # Tarayıcıdan kayıtlara bakmak için
+    networks:
+      - n8n_net
+
+# ── Kalıcı depolama ────────────────────────────────────────────────────────
+volumes:
+  n8n_data:
+
+# ── İç ağ (n8n → api iletişimi) ───────────────────────────────────────────
+networks:
+  n8n_net:
+    driver: bridge
